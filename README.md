@@ -33,7 +33,7 @@ portfolio/
 - **Page d'accueil** : Présentation de mon profil et de mes compétences.
 - **Galerie de projets** : Liste interactive de mes projets avec recherche.
 - **Formulaire de contact** : Envoi de messages directement via EmailJS.
-- **Téléchargement de CV** : Accès rapide à mon CV en PDF.
+- **Téléchargement ET Visualisation de mon CV** : Accès rapide à mon CV en PDF.
 
 ## 🛠️ Installation et Lancement
 
@@ -57,11 +57,7 @@ portfolio/
 
 ## 🌐 Déploiement
 
-Ce projet est déployé sur **Vercel**. Pour déployer votre propre version :
-
-1. Créez un compte sur [Vercel](https://vercel.com)
-2. Installez Vercel CLI : `npm i -g vercel`
-3. Déployez : `npm run deploy`
+Ce projet est déployé sur **Vercel**. Vous pouvez y accéder à l'adresse [rayanhab.live](https://rayanhab.live).
 
 ## 📧 Contact
 
@@ -77,4 +73,4 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ---
 
-Merci de visiter mon portfolio ! 😊
+Merci de visiter mon portfolio !
