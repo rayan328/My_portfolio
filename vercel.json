@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { 
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/CV_Rayan_Habibeche.pdf",
+      "headers": {
+        "Content-Type": "application/pdf"
+      },
+      "dest": "/CV_Rayan_Habibeche.pdf"
+    },
+    { 
+      "src": "/[^.]+",
+      "dest": "/index.html"
+    }
+  ]
+}
