@@ -113,34 +113,45 @@ function About() {
           À Propos de Moi
         </motion.h2>
 
-        <div className="grid md:grid-cols-2 gap-12 mb-16">
+        <div className="flex justify-center mb-16">
           <motion.div 
-            className="space-y-6"
+            className="max-w-4xl"
             variants={itemVariants}
           >
-            <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-3xl shadow-2xl hover:shadow-[0_20px_40px_rgba(187,225,250,0.3)] transition-all duration-500 group">
-              <motion.p 
-                className="text-xl leading-relaxed text-gray-100 group-hover:text-white transition-colors duration-300"
+            <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-10 rounded-3xl shadow-2xl hover:shadow-[0_20px_40px_rgba(187,225,250,0.3)] transition-all duration-500 group">
+              <motion.div 
+                className="text-center group-hover:text-white transition-colors duration-300"
                 whileHover={{ scale: 1.02 }}
               >
-                <span className="text-2xl text-[#BBE1FA] font-semibold">Codeur de jour, explorateur du web de nuit</span>, je transforme des idées en interfaces fluides et interactives.
-                Passionné par l'optimisation et l'innovation, j'aime repousser les limites du développement.
-              </motion.p>
-            </div>
-          </motion.div>
-          
-          <motion.div 
-            className="space-y-6"
-            variants={itemVariants}
-          >
-            <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-3xl shadow-2xl hover:shadow-[0_20px_40px_rgba(187,225,250,0.3)] transition-all duration-500 group">
-              <motion.p 
-                className="text-xl leading-relaxed text-gray-100 group-hover:text-white transition-colors duration-300"
-                whileHover={{ scale: 1.02 }}
-              >
-                Pour moi, chaque projet est une <span className="text-[#BBE1FA] font-semibold">aventure</span> où précision et créativité se rencontrent.
-                Mon mantra ? <span className="text-2xl text-[#BBE1FA] font-bold">"Un bon développeur ne cesse jamais d'apprendre."</span> 🚀
-              </motion.p>
+                <p className="text-2xl leading-relaxed text-white mb-6">
+                  Bonjour, je suis <span className="text-[#BBE1FA] font-bold">Rayan</span>, étudiant en développement web à la 
+                  <span className="text-[#BBE1FA] font-semibold"> Web@cadémie by Epitech</span>.
+                </p>
+                
+                <p className="text-lg leading-relaxed text-gray-100 mb-6">
+                  Passionné par les technologies web modernes, je me spécialise dans la création d'applications 
+                  <span className="text-[#BBE1FA] font-medium"> React</span> et le développement 
+                  <span className="text-[#BBE1FA] font-medium"> full-stack</span>. 
+                  Mon approche combine rigueur technique et créativité pour transformer des idées en solutions digitales innovantes.
+                </p>
+                
+                <p className="text-lg leading-relaxed text-gray-100 mb-6">
+                  Actuellement en formation, je recherche une <span className="text-[#BBE1FA] font-semibold">alternance</span> 
+                  pour mettre en pratique mes compétences et contribuer au développement de projets concrets 
+                  au sein d'une équipe dynamique.
+                </p>
+                
+                <div className="flex items-center justify-center space-x-4 text-sm text-[#BBE1FA] bg-white/5 rounded-2xl p-4">
+                  <div className="flex items-center space-x-2">
+                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                    <span>Disponible pour alternance</span>
+                  </div>
+                  <span>•</span>
+                  <span>Formation 2024-2026</span>
+                  <span>•</span>
+                  <span>Motivé & curieux</span>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>

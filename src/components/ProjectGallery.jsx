@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { ChevronLeft, ChevronRight, ExternalLink, Github } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { projects } from '../data/projects';
 
 function ProjectGallery() {
@@ -44,12 +44,17 @@ function ProjectGallery() {
     setCurrentIndex(index);
   };
 
-  // Get visible projects (current + 2 adjacent)
+  // Get visible projects for continuous scroll
   const getVisibleProjects = () => {
     const visible = [];
-    for (let i = -1; i <= 1; i++) {
+    // Show 5 projects at once for smooth scrolling
+    for (let i = -2; i <= 2; i++) {
       const index = (currentIndex + i + projects.length) % projects.length;
-      visible.push({ ...projects[index], position: i });
+      visible.push({ 
+        ...projects[index], 
+        position: i,
+        displayIndex: index 
+      });
     }
     return visible;
   };
@@ -108,39 +113,41 @@ function ProjectGallery() {
           </button>
 
           {/* Carousel */}
-          <div className="flex justify-center items-center min-h-[600px]">
-            <AnimatePresence mode="wait">
-              {getVisibleProjects().map((project, index) => (
+          <div className="flex justify-center items-center min-h-[600px] overflow-hidden">
+            <div className="flex items-center justify-center relative w-full">
+              {getVisibleProjects().map((project) => (
                 <motion.div
-                  key={`${project.id}-${currentIndex}`}
-                  className={`absolute group ${
-                    project.position === 0 
-                      ? 'z-10 scale-100' 
-                      : project.position === -1 
-                        ? 'z-5 scale-75 -translate-x-80 opacity-60' 
-                        : 'z-5 scale-75 translate-x-80 opacity-60'
-                  }`}
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  key={project.displayIndex}
+                  className="absolute flex-shrink-0"
+                  initial={false}
                   animate={{ 
-                    opacity: project.position === 0 ? 1 : 0.6,
-                    scale: project.position === 0 ? 1 : 0.75,
-                    x: project.position * 320,
-                    rotateY: project.position * 15,
+                    x: project.position * 380, // Espacement entre les cartes
+                    scale: project.position === 0 ? 1 : 0.8,
+                    opacity: Math.abs(project.position) <= 1 ? 1 : 0.6,
+                    zIndex: project.position === 0 ? 20 : 10 - Math.abs(project.position),
+                    rotateY: project.position * 8, // Légère rotation 3D
                   }}
-                  exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ 
                     type: "spring", 
-                    stiffness: 100, 
-                    damping: 20,
-                    duration: 0.5 
+                    stiffness: 300, 
+                    damping: 30,
+                    duration: 0.6
                   }}
                   whileHover={project.position === 0 ? { 
                     scale: 1.05,
                     rotateY: 0,
-                    boxShadow: "0 25px 50px rgba(187, 225, 250, 0.3), 0 10px 20px rgba(187, 225, 250, 0.2)"
+                    transition: { duration: 0.3 }
                   } : {}}
                 >
-                  <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 w-96 h-96 flex flex-col transition-all duration-300 group-hover:border-[#BBE1FA]/40 group-hover:bg-white/15">
+                  <div className={`${
+                    project.isSpecial 
+                      ? 'bg-gradient-to-br from-[#3282B8]/30 to-[#BBE1FA]/20 backdrop-blur-lg border-2 border-[#BBE1FA]/50' 
+                      : 'bg-white/10 backdrop-blur-lg border border-white/20'
+                  } rounded-3xl p-8 w-96 h-96 flex flex-col transition-all duration-300 ${
+                    project.position === 0 
+                      ? 'shadow-2xl shadow-[#BBE1FA]/20 border-[#BBE1FA]/40' 
+                      : 'hover:border-[#BBE1FA]/30'
+                  }`}>
                     {/* Project Image */}
                     <div className="relative overflow-hidden rounded-2xl mb-6 flex-1">
                       <img 
@@ -153,54 +160,81 @@ function ProjectGallery() {
 
                     {/* Project Info */}
                     <div className="space-y-4">
-                      <h3 className="text-2xl font-bold text-[#BBE1FA]">{project.title}</h3>
+                      <h3 className={`text-2xl font-bold ${
+                        project.isSpecial 
+                          ? 'text-[#BBE1FA] animate-pulse' 
+                          : 'text-[#BBE1FA]'
+                      }`}>{project.title}</h3>
                       <p className="text-gray-300 text-sm line-clamp-2">{project.description}</p>
                       
                       {/* Technologies */}
                       <div className="flex flex-wrap gap-2">
-                        {project.technologies.slice(0, 3).map(tech => (
-                          <span 
-                            key={tech} 
-                            className="px-3 py-1 bg-[#3282B8]/50 backdrop-blur-sm rounded-full text-xs text-white border border-[#BBE1FA]/30"
-                          >
-                            {tech}
+                        {project.isSpecial ? (
+                          <span className="px-3 py-1 bg-gradient-to-r from-[#3282B8] to-[#BBE1FA] text-[#1B262C] rounded-full text-xs font-semibold animate-pulse">
+                            {project.technologies[0]}
                           </span>
-                        ))}
-                        {project.technologies.length > 3 && (
-                          <span className="px-3 py-1 bg-[#3282B8]/50 backdrop-blur-sm rounded-full text-xs text-white border border-[#BBE1FA]/30">
-                            +{project.technologies.length - 3}
-                          </span>
+                        ) : (
+                          <>
+                            {project.technologies.slice(0, 3).map(tech => (
+                              <span 
+                                key={tech} 
+                                className="px-3 py-1 bg-[#3282B8]/50 backdrop-blur-sm rounded-full text-xs text-white border border-[#BBE1FA]/30"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                            {project.technologies.length > 3 && (
+                              <span className="px-3 py-1 bg-[#3282B8]/50 backdrop-blur-sm rounded-full text-xs text-white border border-[#BBE1FA]/30">
+                                +{project.technologies.length - 3}
+                              </span>
+                            )}
+                          </>
                         )}
                       </div>
 
                       {/* Action Buttons */}
                       <div className="flex gap-3">
-                        <a 
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 bg-[#BBE1FA] text-[#1B262C] px-4 py-2 rounded-full hover:bg-white transition-all duration-300 hover:scale-105 text-sm font-semibold"
-                        >
-                          <Github size={16} />
-                          Code
-                        </a>
-                        {project.link && (
-                          <a 
-                            href={project.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white px-4 py-2 rounded-full hover:bg-white/20 transition-all duration-300 hover:scale-105 text-sm font-semibold"
+                        {project.isSpecial ? (
+                          <motion.button
+                            onClick={() => {
+                              const contactSection = document.getElementById('contact');
+                              if (contactSection) {
+                                const headerHeight = 80;
+                                const elementPosition = contactSection.offsetTop - headerHeight;
+                                window.scrollTo({
+                                  top: elementPosition,
+                                  behavior: 'smooth'
+                                });
+                              }
+                            }}
+                            className="flex items-center gap-2 bg-[#BBE1FA] text-[#1B262C] px-4 py-2 rounded-full hover:bg-white transition-all duration-300 hover:scale-105 text-sm font-semibold w-full justify-center"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                           >
                             <ExternalLink size={16} />
-                            Demo
-                          </a>
+                            Me Contacter
+                          </motion.button>
+                        ) : (
+                          <>
+                            {project.link && (
+                              <a 
+                                href={project.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 bg-[#BBE1FA] text-[#1B262C] px-4 py-2 rounded-full hover:bg-white transition-all duration-300 hover:scale-105 text-sm font-semibold"
+                              >
+                                <ExternalLink size={16} />
+                                Voir le projet
+                              </a>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
                   </div>
                 </motion.div>
               ))}
-            </AnimatePresence>
+            </div>
           </div>
 
           {/* Progress Indicators */}

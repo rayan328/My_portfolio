@@ -55,6 +55,20 @@ export const projects = [
     image: '/images/Maquette_site.PNG',
     technologies: ['HTML', 'CSS'],
     github: 'https://github.com/rayan328/mysql-project',
-
+  },
+  {
+    id: 8,
+    title : 'my_H5AI',
+    description : 'Indexeur de fichier',
+    image : '/images/Image_h5ai.png',
+    technologies: ['JAVA', 'SpringBoot']
+  },
+  {
+    id: 9,
+    title: 'Et bien d\'autres !',
+    description: 'Découvrez mes autres projets en me contactant directement',
+    image: '/images/plus-projects.svg',
+    technologies: ['À découvrir...'],
+    isSpecial: true,
   }
 ];
