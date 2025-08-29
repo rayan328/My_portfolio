@@ -1,58 +1,202 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, ExternalLink } from 'lucide-react';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const scrollToContact = () => {
-    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 50;
+      setScrolled(isScrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerHeight = 80; // Hauteur de la barre de navigation
+      const elementPosition = element.offsetTop - headerHeight;
+      
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+      setIsMenuOpen(false);
+    }
   };
 
-  const scrollToProjects = () => {
-    document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
-  };
+  const navItems = [
+    { name: 'Accueil', id: 'home' },
+    { name: 'À Propos', id: 'about' },
+    { name: 'Parcours', id: 'parcours' },
+    { name: 'Compétences', id: 'competences' },
+    { name: 'Projets', id: 'projects' },
+    { name: 'Contact', id: 'contact' },
+  ];
+
+  const socialLinks = [
+    {
+      name: 'LinkedIn',
+      url: 'https://www.linkedin.com/in/rayan-hab/',
+      icon: '/images/linkedin.webp',
+    },
+    {
+      name: 'GitHub',
+      url: 'https://github.com/rayan328',
+      icon: '/images/logo github.png',
+    },
+  ];
 
   return (
-    <header className="bg-[#1B262C] p-4 md:p-6 mb-8">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-12">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-4 md:space-x-6">
-            <h1 className="text-[#BBE1FA] font-semibold text-2xl md:text-3xl">&lt;C / &gt;</h1>
-            <h1 className="text-[#3282B8] text-xl md:text-2xl">Rayan Habibeche</h1>
-          </div>
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-[#3282B8]">
-            <svg className="w-6 h-6" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-              {isMenuOpen ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
-        
-        <div className={`${isMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 text-[#3282B8] mt-4 md:mt-0`}>
-          <h2 onClick={scrollToProjects} className="hover:text-[#0F4C75] text-lg md:text-xl transition duration-300 cursor-pointer">Mon Portfolio</h2>
-          <h2 onClick={scrollToContact} className="hover:text-[#0F4C75] text-lg md:text-xl transition duration-300 cursor-pointer">Contact</h2>
-          <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-            <a 
-              href="https://www.linkedin.com/in/rayan-hab/" 
-              className="flex items-center hover:text-[#0F4C75] text-lg md:text-xl transition duration-300 space-x-2"
+    <motion.header 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled 
+          ? 'bg-[#1B262C]/95 backdrop-blur-lg border-b border-white/10 shadow-lg' 
+          : 'bg-transparent'
+      }`}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-4">
+          {/* Logo */}
+          <motion.div 
+            className="flex items-center space-x-3"
+            whileHover={{ scale: 1.05 }}
+          >
+            <motion.h1 
+              className="text-[#BBE1FA] font-bold text-2xl md:text-3xl"
+              animate={{ 
+                textShadow: scrolled ? "0 0 20px rgba(187, 225, 250, 0.5)" : "none"
+              }}
             >
-              <img src="/images/linkedin.webp" alt="LinkedIn" className="w-8 md:w-10 h-8 md:h-10 rounded-full hover:scale-110 transition duration-300" />
-              <span>LinkedIn</span>
-            </a>
-            <a 
-              href="https://github.com/rayan328" 
-              className="flex items-center hover:text-[#0F4C75] text-lg md:text-xl transition duration-300 space-x-2 md:ml-4"
+              &lt;C / &gt;
+            </motion.h1>
+            <motion.h1 
+              className="text-[#3282B8] text-xl md:text-2xl font-semibold"
+              whileHover={{ color: "#BBE1FA" }}
             >
-              <img src="/images/logo github.png" alt="Github" className="w-7 md:w-8 h-7 md:h-8 rounded-full hover:scale-110 transition duration-300" />
-              <span>Github</span>
-            </a>
+              Rayan Habibeche
+            </motion.h1>
+          </motion.div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <motion.button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className="text-[#3282B8] hover:text-[#BBE1FA] transition-colors duration-300 text-lg font-medium relative group"
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {item.name}
+                <motion.div 
+                  className="absolute bottom-0 left-0 w-full h-0.5 bg-[#BBE1FA] origin-left"
+                  initial={{ scaleX: 0 }}
+                  whileHover={{ scaleX: 1 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.button>
+            ))}
+          </nav>
+
+          {/* Social Links - Desktop */}
+          <div className="hidden md:flex items-center space-x-4">
+            {socialLinks.map((link) => (
+              <motion.a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center space-x-2 text-[#3282B8] hover:text-[#BBE1FA] transition-colors duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <img 
+                  src={link.icon} 
+                  alt={link.name} 
+                  className="w-8 h-8 rounded-full transition-transform duration-300 group-hover:scale-110" 
+                />
+                <span className="font-medium">{link.name}</span>
+                <ExternalLink className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </motion.a>
+            ))}
           </div>
+
+          {/* Mobile Menu Button */}
+          <motion.button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden text-[#3282B8] hover:text-[#BBE1FA] p-2"
+            whileTap={{ scale: 0.95 }}
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </motion.button>
         </div>
+
+        {/* Mobile Navigation */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-white/10 bg-[#1B262C]/95 backdrop-blur-lg"
+            >
+              <div className="py-4 space-y-4">
+                {/* Navigation Items */}
+                {navItems.map((item, index) => (
+                  <motion.button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className="block w-full text-left text-[#3282B8] hover:text-[#BBE1FA] py-2 px-4 transition-colors duration-300 text-lg"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item.name}
+                  </motion.button>
+                ))}
+
+                {/* Social Links - Mobile */}
+                <div className="pt-4 border-t border-white/10">
+                  <div className="space-y-3">
+                    {socialLinks.map((link, index) => (
+                      <motion.a
+                        key={link.name}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-3 text-[#3282B8] hover:text-[#BBE1FA] py-2 px-4 transition-colors duration-300"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: (navItems.length + index) * 0.1 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <img 
+                          src={link.icon} 
+                          alt={link.name} 
+                          className="w-6 h-6 rounded-full" 
+                        />
+                        <span>{link.name}</span>
+                        <ExternalLink className="w-4 h-4" />
+                      </motion.a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-      <hr />
-    </header>
+    </motion.header>
   );
 }
 
